@@ -39,8 +39,19 @@ public class ProjectCalloutService {
 }
 
 
-public class QueueablePMSCall implements Queueable, Database.AllowsCallouts {
+public with sharing class QueueablePMSCall implements Queueable, Database.AllowsCallouts {
     public void execute(QueueableContext context) {
-        // awesome code here
+        List<Opportunity> opps = [
+            select id
+            from Opportunity
+            where type =: 'New Project' and StageName =: 'Closed Won'];
+
+        List<id> listaToTrue = new List<id>();
+        for(Opportunity a : opps){
+            listaToTrue.add(a.id);
+        }
+
+        (new ProjectCalloutService()).PostOpportunityToPMS(listaToTrue);
+
     }
 }
