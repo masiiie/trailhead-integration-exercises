@@ -2,14 +2,18 @@ public class ProjectCalloutService {
     //Complete the implementation for business and callout logic
 	public static void postOpportunityToPMS(id opId){
         Opportunity opp = [
-            select id, name, cuenta.name, closeDate, amount  
-            from Opportunity opp, opp.AccountId cuenta
-            where id = opId];  
+            select id, name, Account.Name, closeDate, amount  
+            from Opportunity
+            where id =: opId];  
+
+       //List<ServiceTokens_c> mcs = ServiceTokens_c.getall().values();
+       String token = 'f2785df4-45e8-4d7c-8456-de005fb86e7f';
 
         Http http = new Http();
         HttpRequest request = new HttpRequest();
         request.setEndpoint('https://sb-integration-pms-2.herokuapp.com/projects');
         request.setMethod('POST');
+        request.setHeader('token', token);
         request.setHeader('Content-Type', 'application/json;charset=UTF-8');
         // Set the body as a JSON object
         String jsonBody = string.format(
@@ -17,16 +21,18 @@ public class ProjectCalloutService {
             new string[]{
                 opp.id, 
                 opp.name,
-                opp.cuenta.name,
-                opp.closeDate,
-                opp.amount});
+                opp.Account.Name,
+                String.valueOf(opp.closeDate),
+                String.valueOf(opp.amount)});
         request.setBody(jsonBody);
         HttpResponse response = http.send(request);
         // Parse the JSON response
-        if(response.getStatusCode() != 201) {
-            System.debug('The status code returned was not expected: ' + response.getStatusCode() + ' ' + response.getStatus());
-        } else {
-            System.debug(response.getBody());
+        if(response.getStatusCode() == 201) {
+            opp.StageName = 'Submitted Project';
+            update opp;
+        } else if(response.getStatusCode() == 500) {
+            opp.StageName = 'Resubmit Project';
+            update opp;
         }
     }
 }
