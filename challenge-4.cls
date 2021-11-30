@@ -44,7 +44,3 @@ public class QueueablePMSCall implements Queueable, Database.AllowsCallouts {
         // awesome code here
     }
 }
-
-public class ProjectCalloutServiceMock {
-   //Implement http mock callout here
-}
