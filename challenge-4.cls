@@ -6,6 +6,12 @@ public class ProjectCalloutService {
 }
 
 
+public class QueueablePMSCall implements Queueable {
+    public void execute(QueueableContext context) {
+        // awesome code here
+    }
+}
+
 public class ProjectCalloutServiceMock {
    //Implement http mock callout here
 }
