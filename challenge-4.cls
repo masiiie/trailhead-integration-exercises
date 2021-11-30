@@ -1,10 +1,10 @@
 public class ProjectCalloutService {
     //Complete the implementation for business and callout logic
-	public static void postOpportunityToPMS(id opId){
+	public static void PostOpportunityToPMS(List<id> opId){
         Opportunity opp = [
             select id, name, Account.Name, closeDate, amount  
             from Opportunity
-            where id =: opId];  
+            where id =: opId[0]];  
 
        //List<ServiceTokens_c> mcs = ServiceTokens_c.getall().values();
        String token = 'f2785df4-45e8-4d7c-8456-de005fb86e7f';
