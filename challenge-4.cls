@@ -1,5 +1,6 @@
 public class ProjectCalloutService {
     //Complete the implementation for business and callout logic
+    @InvocableMethod(label='Make REST Callout' description='Inserts' category= 'Opportunity')
 	public static void PostOpportunityToPMS(List<id> opId){
         Opportunity opp = [
             select id, name, Account.Name, closeDate, amount  
@@ -38,7 +39,7 @@ public class ProjectCalloutService {
 }
 
 
-public class QueueablePMSCall implements Queueable {
+public class QueueablePMSCall implements Queueable, Database.AllowsCallouts {
     public void execute(QueueableContext context) {
         // awesome code here
     }
