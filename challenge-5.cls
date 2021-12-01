@@ -18,7 +18,7 @@ private class ProjectCalloutServiceTest {
         }
 
         Test.startTest();
-        ID jobId = ProjectCalloutService.PostOpportunityToPMS(idList);
+        ProjectCalloutService.PostOpportunityToPMS(idList);
         Test.stopTest();
 
         
@@ -37,7 +37,8 @@ private class ProjectCalloutServiceTest {
         }
 
         Test.startTest();
-        ID jobId = ProjectCalloutService.PostOpportunityToPMS(idList);
+        
+        ProjectCalloutService.PostOpportunityToPMS(idList);
         Test.stopTest();
 
         
@@ -76,6 +77,7 @@ public class ProjectCalloutServiceMockFailure implements HttpCalloutMock {
     public class TestDataFactory {
         public static List<Opportunity> createLisOpp(Integer numOpps) {
             Account acc = new Account(name='MasiAccount');
+            insert acc;
             List<Opportunity> opps = new List<Opportunity>();
             for (Integer j=0;j<numOpps;j++) {
                 opps.add(new Opportunity(

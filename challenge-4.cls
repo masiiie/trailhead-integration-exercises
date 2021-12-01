@@ -13,7 +13,7 @@ public class ProjectCalloutService {
         private String jsonBody;
         
         private Opportunity opp;
-        private String tokenString = 'f2785df4-45e8-4d7c-8456-de005fb86e7f';
+        
 
         public QueueablePMSCall(Opportunity oppObj){
             opp = oppObj;
@@ -39,7 +39,7 @@ public class ProjectCalloutService {
             request.setEndpoint('callout:ProjectService/'+ token.Token__c);
             //request.setEndpoint('https://sb-integration-pms-2.herokuapp.com/projects');
             request.setMethod('POST');
-            request.setHeader('token', tokenString);
+            request.setHeader('token', token.Token__c);
             request.setHeader('Content-Type', 'application/json;charset=UTF-8');
             // Set the body as a JSON object
             
