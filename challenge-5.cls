@@ -12,6 +12,7 @@ private class ProjectCalloutServiceTest {
             limit 2];
         */
         List<Opportunity> opps = TestDataFactory.createLisOpp(3);
+        TestDataFactory.createToken();
         List<id> idList = new List<id>();
         for(Opportunity a : opps){
             idList.add(a.id);
@@ -30,6 +31,7 @@ private class ProjectCalloutServiceTest {
     static void testFailure() {
         Test.setMock(HttpCalloutMock.class, new ProjectCalloutServiceMock()); 
 
+        TestDataFactory.createToken();
         List<Opportunity> opps = TestDataFactory.createLisOpp(3);
         List<id> idList = new List<id>();
         for(Opportunity a : opps){
@@ -75,6 +77,13 @@ public class ProjectCalloutServiceMockFailure implements HttpCalloutMock {
 
 @isTest
     public class TestDataFactory {
+        public static ServiceTokens__c createToken(){
+            ServiceTokens__c token = new ServiceTokens__c(
+                Name='ProjectServiceToken',
+                Token__c='27');
+            insert token;
+            return token;
+        }
         public static List<Opportunity> createLisOpp(Integer numOpps) {
             Account acc = new Account(name='MasiAccount');
             insert acc;
