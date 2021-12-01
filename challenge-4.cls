@@ -11,19 +11,22 @@ public class ProjectCalloutService {
 
     public class QueueablePMSCall implements System.Queueable, Database.AllowsCallouts {
         private String jsonBody;
+        
         private Opportunity opp;
         private String tokenString = 'f2785df4-45e8-4d7c-8456-de005fb86e7f';
 
         public QueueablePMSCall(Opportunity oppObj){
             opp = oppObj;
-            jsonBody = string.format(
-                '{"opportunityId": {0}, "opportunityName": {1}, "accountName": {2}, "closeDate": {3}, "amount": {4}}', 
-                new string[]{
-                    opp.id, 
-                    opp.name,
-                    opp.Account.Name,
-                    String.valueOf(opp.closeDate),
-                    String.valueOf(opp.amount)});
+            JSONGenerator gen = JSON.createGenerator(true);
+            gen.writeStartObject();
+            gen.writeStringField('opportunityId', opp.Id);
+            gen.writeStringField('opportunityName', opp.Name);
+            gen.writeStringField('accountName', opp.account.Name);
+            gen.writeDateField('closeDate', opp.closeDate);
+            gen.writeNumberField('amount', opp.amount);
+            gen.writeEndObject();            
+            
+            jsonBody = gen.getAsString();
         }
         
         public void execute(QueueableContext context) {
