@@ -7,7 +7,6 @@ public class ProjectCalloutService {
             from Opportunity
             where id =: opId[0]]; 
         ID jobID = System.enqueueJob(new QueueablePMSCall(opp));
-        return jobID;
     }
 
     public class QueueablePMSCall implements System.Queueable, Database.AllowsCallouts {
