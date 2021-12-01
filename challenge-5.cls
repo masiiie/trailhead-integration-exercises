@@ -4,35 +4,47 @@ private class ProjectCalloutServiceTest {
     static void testSuccess() {
         Test.setMock(HttpCalloutMock.class, new ProjectCalloutServiceMock()); 
 
-        Opportunity opps = [select id frm Opportunity]
+        List<Opportunity> opps = [
+            select id
+            from Opportunity
+            where type =: 'New Project' and StageName =: 'Closed Won'];
 
-        ID jobId = ProjectCalloutService.PostOpportunityToPMS()
+        List<id> idList = new List<id>();
+        for(Opportunity a : opps){
+            idList.add(a.id);
+        }
+
+        Test.startTest();
+        ID jobId = ProjectCalloutService.PostOpportunityToPMS(idList);
+        Test.stopTest();
 
         
-        String contentType = response.getHeader('Content-Type');
-        System.assert(contentType == 'application/json');
-        String actualValue = response.getBody();
-        System.debug(response.getBody());
-        String expectedValue = '{"animals": ["majestic badger", "fluffy bunny", "scary bear", "chicken", "mighty moose"]}';
-        System.assertEquals(actualValue, expectedValue);
-        System.assertEquals(200, response.getStatusCode());
+        Opportunity opp = [select id, StageName frm Opportunity where id =: idList[0]];
+        
+        System.assertEquals(opp.StageName, 'Submitted Project');
     }
 }
 
 @isTest
 public class ProjectCalloutServiceMock implements HttpCalloutMock {
-   // Implement this interface method
     global HTTPResponse respond(HTTPRequest request) {
         // Create a fake response
         HttpResponse response = new HttpResponse();
         response.setHeader('Content-Type', 'application/json');
-        response.setBody('{"animals": ["majestic badger", "fluffy bunny", "scary bear", "chicken", "mighty moose"]}');
-        response.setStatusCode(200);
+        response.setStatus('OK');
+        response.setStatusCode(201);
         return response; 
     }
 }
 
 @isTest
 public class ProjectCalloutServiceMockFailure implements HttpCalloutMock {
-   //Implement http mock callout failure here 
+   global HTTPResponse respond(HTTPRequest request) {
+        // Create a fake response
+        HttpResponse response = new HttpResponse();
+        response.setHeader('Content-Type', 'application/json');
+        response.setStatus('Grave error!!');
+        response.setStatusCode(500);
+        return response; 
+    }
 }
