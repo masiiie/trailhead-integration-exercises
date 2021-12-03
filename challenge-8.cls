@@ -19,7 +19,10 @@ trigger ProjectTrigger on Project__c (after update) {
         SELECT id, Status__c, ProjectRef__c, Billable_Amount__c 
         from Project__c 
         where id IN :Trigger.New and Status__c =: 'Billable'];
+    
     for(Project__c a : proyects) {
-        BillingCalloutService.callBillingService(a.ProjectRef__c, a.Billable_Amount__c);
+        string ref = String.valueOf(a.ProjectRef__c);
+        double amount = a.Billable_Amount__c;
+        BillingCalloutService.callBillingService(ref, amount);
     } 
 }
