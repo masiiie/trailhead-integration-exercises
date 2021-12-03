@@ -47,6 +47,7 @@ private class BillingCalloutServiceTest {
     @isTest static void testCallout() {              
         // This causes a fake response to be generated
         Test.setMock(WebServiceMock.class, new BillingCalloutServiceMock());
+        TestDataFactory.createProject();
         BillingCalloutService.callBillingService();
         // Verify that a fake result is returned
         System.assertEquals(3.0, result); 
