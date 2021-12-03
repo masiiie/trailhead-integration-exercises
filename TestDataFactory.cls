@@ -7,6 +7,15 @@
             insert token;
             return token;
         }
+        public static ServiceCredentials__c createCredential(){
+            ServiceCredentials__c credential = new ServiceCredentials__c(
+                Username__c = 'masi',
+                Password__c = '27',
+                name = 'BillingServiceCredential'
+            );
+            insert credential;
+            return credential;
+        }
         public static List<Opportunity> createLisOpp(Integer numOpps) {
             Account acc = new Account(name='MasiAccount');
             insert acc;
@@ -24,12 +33,15 @@
             
             return opps;
         }
-        public static void createProject(){
+        public static Project__c createProject(){
+            Opportunity opp = createLisOpp(1)[0];
             Project__c project = new Project__c(
                 Status__c = 'Running',
                 ProjectRef__c = 'hola',
-                Billable_Amount__c = 44
+                Billable_Amount__c = 44,
+                Opportunity__c = opp.id
             );
             insert project;
+            return project;
         }
     }

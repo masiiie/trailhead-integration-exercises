@@ -11,11 +11,11 @@ global class BillingCalloutServiceMock implements WebServiceMock {
            String responseName,
            String responseType) {
         // start - specify the response you want to send
-        BillingServiceProxy.billProjectResponse_element billingResponse = 
+        BillingServiceProxy.billProjectResponse_element response_x = 
             new BillingServiceProxy.billProjectResponse_element();
-        billingResponse.status = 'OK';
+        response_x.status = 'OK';
         // end
-        response.put('billingResponse', billingResponse); 
+        response.put('response_x', response_x); 
    }
 }
 
@@ -33,23 +33,43 @@ global class BillingCalloutServiceMockFailure implements WebServiceMock {
            String responseName,
            String responseType) {
         // start - specify the response you want to send
-        BillingServiceProxy.billProjectResponse_element billingResponse = 
+        BillingServiceProxy.billProjectResponse_element response_x = 
             new BillingServiceProxy.billProjectResponse_element();
-        billingResponse.status = 'Error!!';
+        response_x.status = 'Error!!';
         // end
-        response.put('billingResponse', billingResponse); 
+        response.put('response_x', response_x); 
    }
 }
 
 
 @isTest
 private class BillingCalloutServiceTest {
-    @isTest static void testCallout() {              
+    @isTest static void testSuccess() {              
         // This causes a fake response to be generated
         Test.setMock(WebServiceMock.class, new BillingCalloutServiceMock());
-        TestDataFactory.createProject();
-        BillingCalloutService.callBillingService();
-        // Verify that a fake result is returned
-        System.assertEquals(3.0, result); 
+        Project__c project = TestDataFactory.createProject();
+        TestDataFactory.createCredential();
+
+
+        Test.startTest();
+        project.Status__c = 'Billable';
+        update project;
+        Test.stopTest();
+
+        System.assertEquals('Billed', project.Status__c);
+    }
+
+    @isTest static void testFailure() {              
+        // This causes a fake response to be generated
+        Test.setMock(WebServiceMock.class, new BillingCalloutServiceMockFailure());
+        Project__c project = TestDataFactory.createProject();
+        TestDataFactory.createCredential();
+
+        Test.startTest();
+        project.Status__c = 'Billable';
+        update project;
+        Test.stopTest();
+
+        System.assertNotEquals('Billed', project.Status__c);
     }
 }
