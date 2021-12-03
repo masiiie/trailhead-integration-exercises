@@ -1,15 +1,15 @@
 public class BillingCalloutService {
-    @future
+    @future(callout=true)
     public static void callBillingService(String projectid, Double billAmount){
         ServiceCredentials__c credentials = ServiceCredentials__c.getValues('BillingServiceCredential');
-        salesforceComThInvoiceWebService.project project_request = new salesforceComThInvoiceWebService.project();
+        BillingServiceProxy.project project_request = new BillingServiceProxy.project();
         project_request.username = credentials.Username__c;
         project_request.password = credentials.Password__c;
         project_request.projectid = projectid;
         project_request.billAmount = billAmount;
 
 
-        salesforceComThInvoiceWebService.InvoicesPortSoap11 invoice = new salesforceComThInvoiceWebService.InvoicesPortSoap11();
+        BillingServiceProxy.InvoicesPortSoap11 invoice = new BillingServiceProxy.InvoicesPortSoap11();
         string res = invoice.billProject(project_request);
     }
 }
